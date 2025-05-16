@@ -1,0 +1,25 @@
+services:
+  document-api:
+    build: ./api
+    dns: 8.8.8.8
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploaded_docs:/app/uploaded_docs
+      - ./chroma_db:/app/chroma_db
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CHROMA_DB_URL=http://chroma-db:8000
+
+  chroma-db:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - ALLOW_RESET=TRUE
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=admin:admin
+
+volumes:
+  chroma_data:
